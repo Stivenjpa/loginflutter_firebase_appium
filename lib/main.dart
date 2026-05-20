@@ -4,6 +4,7 @@ import 'package:loginflutter_firebase_appium/providers/auth_provider.dart';
 import 'package:loginflutter_firebase_appium/providers/login_provider.dart';
 import 'package:loginflutter_firebase_appium/screens/home_screen.dart';
 import 'package:loginflutter_firebase_appium/screens/login_screen.dart';
+import 'package:loginflutter_firebase_appium/screens/register_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         //Mapa de rutas
         "/formLogin": (context) => const FormLogin(),
         "/home": (context) => const HomeScreen(),
+        "/formRegister": (context) => const FormRegister(),
       },
 
       debugShowCheckedModeBanner: false,

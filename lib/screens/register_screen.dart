@@ -5,23 +5,21 @@ import 'package:loginflutter_firebase_appium/widgets/email_field.dart';
 import 'package:loginflutter_firebase_appium/providers/login_provider.dart';
 import 'package:loginflutter_firebase_appium/providers/auth_provider.dart';
 
-class FormLogin extends StatefulWidget {
-  const FormLogin({super.key});
+class FormRegister extends StatefulWidget {
+  const FormRegister({super.key});
 
   @override
-  State<FormLogin> createState() => _FormLoginState();
+  State<FormRegister> createState() => _FormRegisterState();
 }
 
-class _FormLoginState extends State<FormLogin> {
+class _FormRegisterState extends State<FormRegister> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    //Providers
     final formProvider = context.watch<FormProvider>();
     final authProvider = context.read<AuthenticationProvider>();
-
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Bienvenido')),
+      appBar: AppBar(centerTitle: true, title: const Text('Registro')),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -42,7 +40,9 @@ class _FormLoginState extends State<FormLogin> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      key: const ValueKey('key_login_button'), //Key para appium
+                      key: const ValueKey(
+                        'key_register_button',
+                      ), //Key para appium
                       onPressed:
                           formProvider
                               .isLoading //Pantalla de carga
@@ -52,10 +52,11 @@ class _FormLoginState extends State<FormLogin> {
                                 formProvider.isLoading = true;
                                 try {
                                   //Login en firebase
-                                  await authProvider.signInWithEmail(
+                                  await authProvider.signUpWithEmail(
                                     formProvider.emailController.text,
                                     formProvider.passwordController.text,
                                   );
+                                  print('Usuario registrado');
                                   if (context.mounted) {
                                     Navigator.of(
                                       context,
@@ -64,6 +65,7 @@ class _FormLoginState extends State<FormLogin> {
                                       (_) => false,
                                     );
                                   }
+                                  ;
                                 } catch (e) {
                                   //Capturar error y mostrarlo
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -83,29 +85,7 @@ class _FormLoginState extends State<FormLogin> {
                               height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Iniciar sesion'),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                "/formRegister",
-                                (_) => false,
-                              );
-                            },
-                            child: Text('Registrate aquí.'),
-                          ),
-                        ),
-                        Spacer(flex: 1),
-                        Flexible(
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text('Olvidó su contraseña?.'),
-                          ),
-                        ),
-                      ],
+                          : const Text('Registrarme'),
                     ),
                   ],
                 ),

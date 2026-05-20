@@ -24,6 +24,24 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> signUpWithEmail(String email, String password) async {
+    try {
+      // Este método registra al usuario en Firebase y lo loguea automáticamente
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      // Aquí puedes capturar errores específicos (ej: el correo ya está en uso)
+      if (e.code == 'email-already-in-use') {
+        throw 'Este correo ya está registrado por otro usuario.';
+      } else if (e.code == 'weak-password') {
+        throw 'La contraseña es muy débil (mínimo 6 caracteres).';
+      }
+      throw e.message ?? 'Ocurrió un error inesperado.';
+    }
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
     notifyListeners();
