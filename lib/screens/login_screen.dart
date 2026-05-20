@@ -55,7 +55,13 @@ class _FormLoginState extends State<FormLogin> {
                                   formProvider.emailController.text,
                                   formProvider.passwordController.text,
                                 );
-                                print('Login Exitoso');
+                                if (context.mounted) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    "/home",
+                                    (_) => false,
+                                  );
+                                }
+                                ;
                               } catch (e) {
                                 //Capturar error y mostrarlo
                                 ScaffoldMessenger.of(context).showSnackBar(
