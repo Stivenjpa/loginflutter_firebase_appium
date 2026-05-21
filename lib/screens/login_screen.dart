@@ -13,7 +13,7 @@ class FormLogin extends StatefulWidget {
 }
 
 class _FormLoginState extends State<FormLogin> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     //Providers
@@ -31,14 +31,18 @@ class _FormLoginState extends State<FormLogin> {
                 vertical: 80,
               ),
               child: Form(
-                key: formKey,
+                key: loginFormKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    EmailField(emailController: formProvider.emailController),
+                    EmailField(
+                      emailController: formProvider.emailController,
+                      emailFieldKey: const ValueKey('login_email_key'),
+                    ),
                     const SizedBox(height: 20),
                     PasswordField(
                       passwordController: formProvider.passwordController,
+                      passwordFieldKey: const ValueKey('login_password_key'),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -48,7 +52,7 @@ class _FormLoginState extends State<FormLogin> {
                               .isLoading //Pantalla de carga
                           ? null
                           : () async {
-                              if (formProvider.validateForm(formKey)) {
+                              if (formProvider.validateForm(loginFormKey)) {
                                 formProvider.isLoading = true;
                                 try {
                                   //Login en firebase
@@ -56,6 +60,7 @@ class _FormLoginState extends State<FormLogin> {
                                     formProvider.emailController.text,
                                     formProvider.passwordController.text,
                                   );
+                                  formProvider.clearControllers();
                                   if (context.mounted) {
                                     Navigator.of(
                                       context,
@@ -71,6 +76,7 @@ class _FormLoginState extends State<FormLogin> {
                                       content: Text('Error: ${e.toString()}'),
                                     ),
                                   );
+                                  formProvider.clearControllers();
                                 } finally {
                                   //Finalizamos el loading
                                   formProvider.isLoading = false;
@@ -90,6 +96,7 @@ class _FormLoginState extends State<FormLogin> {
                         Flexible(
                           child: TextButton(
                             onPressed: () {
+                              formProvider.clearControllers();
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                 "/formRegister",
                                 (_) => false,

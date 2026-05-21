@@ -7,7 +7,7 @@ class AuthenticationProvider extends ChangeNotifier {
   //Verifica sí el usuario actual existe
   User? get currentUser => _auth.currentUser;
 
-  //Funcion para iniciar sesion con email y contraseña
+  //Funcion para iniciar sesion con email y contraseña en firebase
   Future<UserCredential> signInWithEmail(String email, String password) async {
     try {
       //Autenticacion con firebase
@@ -18,12 +18,16 @@ class AuthenticationProvider extends ChangeNotifier {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       //Error de Firebase se muestra en pantalla
+      if (e.code == 'invalid-credential') {
+        throw 'Credenciales invalidas';
+      }
       throw e;
     } catch (e) {
       throw Exception('Ocurrio un error en la autenticacion');
     }
   }
 
+  //Funcion para registrar usuario en firebase
   Future<void> signUpWithEmail(String email, String password) async {
     try {
       // Este método registra al usuario en Firebase y lo loguea automáticamente

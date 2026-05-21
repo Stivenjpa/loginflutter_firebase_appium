@@ -13,7 +13,7 @@ class FormRegister extends StatefulWidget {
 }
 
 class _FormRegisterState extends State<FormRegister> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final formProvider = context.watch<FormProvider>();
@@ -29,14 +29,18 @@ class _FormRegisterState extends State<FormRegister> {
                 vertical: 80,
               ),
               child: Form(
-                key: formKey,
+                key: registerFormKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    EmailField(emailController: formProvider.emailController),
+                    EmailField(
+                      emailController: formProvider.emailController,
+                      emailFieldKey: const ValueKey('register_email_key'),
+                    ),
                     const SizedBox(height: 20),
                     PasswordField(
                       passwordController: formProvider.passwordController,
+                      passwordFieldKey: const ValueKey('register_password_key'),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -48,7 +52,7 @@ class _FormRegisterState extends State<FormRegister> {
                               .isLoading //Pantalla de carga
                           ? null
                           : () async {
-                              if (formProvider.validateForm(formKey)) {
+                              if (formProvider.validateForm(registerFormKey)) {
                                 formProvider.isLoading = true;
                                 try {
                                   //Login en firebase
@@ -57,6 +61,7 @@ class _FormRegisterState extends State<FormRegister> {
                                     formProvider.passwordController.text,
                                   );
                                   print('Usuario registrado');
+                                  formProvider.clearControllers();
                                   if (context.mounted) {
                                     Navigator.of(
                                       context,
@@ -65,7 +70,6 @@ class _FormRegisterState extends State<FormRegister> {
                                       (_) => false,
                                     );
                                   }
-                                  ;
                                 } catch (e) {
                                   //Capturar error y mostrarlo
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -86,6 +90,20 @@ class _FormRegisterState extends State<FormRegister> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Text('Registrarme'),
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            formProvider.clearControllers();
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              "/formLogin",
+                              (_) => false,
+                            );
+                          },
+                          child: Text('Volver a loguin'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

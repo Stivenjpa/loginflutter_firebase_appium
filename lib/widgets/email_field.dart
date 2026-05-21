@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 
 class EmailField extends StatelessWidget {
   final TextEditingController emailController;
-  const EmailField({super.key, required this.emailController});
+  final Key emailFieldKey;
+  const EmailField({
+    super.key,
+    required this.emailController,
+    required this.emailFieldKey,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: TextInputType.streetAddress,
+      keyboardType: TextInputType.emailAddress,
       controller: emailController,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      key: const ValueKey('key_email_field'), //Key para appium
+      key: emailFieldKey, //Key para appium
       decoration: InputDecoration(
         labelText: 'Correo Electronico',
         hintText: 'Por favor ingrese su correo electronico',

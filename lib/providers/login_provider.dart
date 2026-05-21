@@ -21,4 +21,9 @@ class FormProvider extends ChangeNotifier {
     passwordController.dispose();
     super.dispose();
   }
+
+  void clearControllers() {
+    emailController.clear();
+    passwordController.clear();
+  }
 }
